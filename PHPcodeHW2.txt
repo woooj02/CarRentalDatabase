@@ -1,0 +1,154 @@
+CREATE DATABASE harris_kafley_car_rentals;
+
+CREATE TABLE customer (
+    LastName char (20),
+    FirstInt char (1),
+    PhoneNum int (10),
+    Id_Num int AUTO_INCREMENT NOT NULL PRIMARY KEY
+);
+CREATE TABLE CARS (
+    Model char (20),
+    Make char (20),
+    YearofMake int (4),
+    Color char (20),
+    Num_Seats int (1),
+    Has_AWD char (1),
+    Has_Truck_Bed char (1),
+    Is_Avalible char (1),
+    Vehicle_ID int AUTO_INCREMENT NOT NULL PRIMARY KEY
+);
+CREATE TABLE TRANSACTIONS (
+    Due_Date DATE NOT NULL, 
+    Start_Date DATE NOT NULL,
+    Trans_Start DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    Return_Date DATE,
+    Total_Rental_Cost float,
+    RentalLen int (2),
+	Is_Returned char (2),
+	rate_ID int NOT NULL,
+	Vehicle_ID int NOT NULL,
+    Id_Num int NOT NULL,
+    Tran_ID int NOT NULL AUTO_INCREMENT PRIMARY KEY
+);
+ALTER TABLE transactions
+ADD CONSTRAINT FK_RateID
+FOREIGN KEY (rate_ID) REFERENCES rental_rate(rate_ID);
+ALTER TABLE transactions
+ADD CONSTRAINT FK_VehicleID
+FOREIGN KEY (Vehicle_ID) REFERENCES cars(Vehicle_ID);
+ALTER TABLE transactions
+ADD CONSTRAINT FK_Person_ID
+FOREIGN KEY (Id_Num) REFERENCES customer(Id_Num);
+
+CREATE TABLE Rental_Rate(
+	Daily_Rate int NOT NULL,
+	Weekly_Rate int NOT NULL,
+	Is_Daily char(1) NOT NULL,
+	Is_Weekly char(1) NOT NULL
+	rate_ID int NOT NULL AUTO_INCREMENT PRIMARY KEY
+);
+
+/*All Customers*/
+SELECT LastName, FirstInt, PhoneNum, Id_Num
+FROM customer
+/*All Cars*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+/*Avalible Cars*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+WHERE Is_Avalible = 'y' OR Is_Avalible = 'Y'
+/*Types of Cars in order  compact, medium, large, SUV, truck, van*/
+/*Compact*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+WHERE Num_Seats <= 3 
+/*Large*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+WHERE Num_Seats >= 8
+/*Meduium*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+WHERE Num_Seats > 3 AND Num_Seats < 8
+/*Van*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+WHERE Num_Seats > 5 AND Has_Truck_Bed = 'N'
+/*SUV*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+WHERE Has_AWD = 'Y' AND Has_Truck_Bed = 'N'
+/*Truck*/
+SELECT Model, Make, YearofMake, Color, Num_Seats, Has_AWD, Has_Truck_Bed, Vehicle_ID
+FROM CARS
+WHERE Has_Truck_Bed = 'Y'
+
+
+
+INSERT INTO Cars (Model, Make, YearofMake , Color , Num_Seats, Has_AWD , Has_Truck_Bed , Is_Avalible)
+VALUES ('adeq', 'Porsche', 2009, 'Red' , 2 , 'N' , 'N' , 'Y' )
+
+UPDATE Rental_Rate
+SET Weekly_Rate = 120
+WHERE Is_Weekly = 'Y'
+
+INSERT INTO Customers (LastName , FirstInt , PhoneNum )
+VALUES ('neoppp', 'ashim' ,  720339999);
+
+INSERT INTO transactions (Due_Date, RentalLen, Start_Date, vehicle_ID, Id_Num) 
+VALUES('2021-03-05', '7', '2021-27-04',1,1)
+
+UPDATE CARS
+SET Is_Avalible = 'N'
+WHERE Vehicle_ID = 1;
+/*Transaction*/
+
+INSERT INTO transactions (Due_Date, Start_Date, Return_Date , Total_Rental_Cost , Vehicle_ID, ID_Num , RentalLen , Is_Returned , Tran_ID)
+VALUES ('2021-04-06', '2021-03-05',  '2021-04-05' , '240' , '2' , '5' , '30' ,'Y', '1' )
+
+SELECT transactions.Due_Date, transactions.Start_Date,transactions.Return_Date,transactions.Vehicle_ID,transactions.Id_Num,transactions.RentalLen, transactions.Tran_ID, customer.FirstInt, customer.LastName
+FROM transactions, customer
+
+SELECT transactions.Tran_ID, cars.Vehicle_ID, cars.Model, transactions.Due_Date, customer.LastName, transactions.Is_Returned  
+FROM transactions
+INNER JOIN customer ON transactions.ID_Num=customer.ID_Num
+INNER JOIN cars ON transactions.vehicle_ID=cars.vehicle_ID
+WHERE transactions.Is_Returned='Y';
+
+SELECT transactions.Tran_ID, cars.Vehicle_ID, cars.Model, transactions.Due_Date, customer.LastName, customer.PhoneNum,transactions.Is_Returned
+FROM transactions
+INNER JOIN customer ON transactions.ID_Num=customer.ID_Num
+INNER JOIN cars ON transactions.vehicle_ID=cars.vehicle_ID
+WHERE transactions.Is_Returned='Y';
+
+SELECT transactions.Tran_ID, transactions.Due_Date, transactions.Is_Returned, customer.LastName  
+FROM transactions
+INNER JOIN customer ON transactions.ID_Num=customer.ID_Num
+WHERE transactions.Is_Returned='Y';
+
+SELECT transactions.Tran_ID, cars.Vehicle_ID, cars.Model, transactions.Trans_Start,transactions.Due_Date, transactions.Return_Date,customer.LastName,customer.FirstInt, transactions.RentalLen,transactions.Total_Rental_Cost 
+FROM transactions INNER JOIN customer ON transactions.ID_Num=customer.ID_Num INNER JOIN cars ON transactions.vehicle_ID=cars.vehicle_ID 
+WHERE transactions.Is_Returned='Y'
+
+UPDATE transactions
+SET RentalLen = Due_Date - Start_Date 
+WHERE ID_Num = '42069' AND Vehicle_ID = '2' AND Start_Date = '2021-05-03';
+// bellow in the works above is used
+
+//for geting total cost
+UPDATE transactions
+INNER JOIN
+rental_rate ON transactions.rate_ID=rental_rate.rate_ID
+SET Total_Rental_Cost = (RentalLen*rental_rate.Weekly_Rate)/7
+WHERE transactions.rate_ID='2' AND Tran_ID = '11'
+
+//returning the car
+UPDATE cars
+SET Is_Avalible = 'Y'
+WHERE Vehicle_ID = '2'
+
+//renting car
+UPDATE cars
+SET Is_Avalible = 'N'
+WHERE Vehicle_ID = '2'

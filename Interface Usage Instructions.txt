@@ -1,0 +1,36 @@
+Adding a new Customer:
+	1. Use the four input feild below Customer Info (Enter First Inital, ENter Last Name, Phone Number, Id_Num_I)
+	2. Press Submit New Customer
+Display a Customer:
+	1. The feild ID_Num_I must be fill in with a valid customer ID_Num
+	2. Press the Display A Customer button.
+Checking and Changing Rental Prices.
+	1. Using the input feilds below check and change rental prices the rates can be seached in two ways.
+		Searching:
+			1. Enter oposing booleans "Y" and "N" in the corisponding boxes.
+			or
+			1. Enter the rate ID in the rate ID boxes
+			2. Press search for Prices
+	2. Once seach occurs the feild will populate with the info from the database
+	3. Enter the new rate in the corisponding price box. (If you don't know which is which fill in both with the rate that is going to be used. Only the rate that matches the rate ID will be used in the table at a given time.)
+	4. Press the Update Price button.
+Entering A New Car
+	1. Fill in the seven corisponding input feilds below (To enter a new car fill in fields below and hit submit.)
+	2. Press submit and the car will be saved as avalible.
+	
+Entering A New Rental
+	(Our interface only allows cars to be returned on the curent day. To get the results you may expect with cost and total time enter a rental in the past that is due today for testing pourposes.)
+	1. Enter a valid customer ID, Vehicle ID (from avalible cars), and rate ID
+	2. Enter start and due date for the rental. (The start date is the day the car will be picked up. The transactions will save the day the transaction is started.)
+	3. Press new rental. (The corisponding vehicle will be set as unavlaible and the transaction will chnage to not returned to show it is current.)
+Returning a Rental
+	1. Enter a calid current transaction ID (Current rentals can be found with the current rental button.)
+	2. Press the Fill In Rental Data button (the feilds that are not transaction ID will)
+	3. Now that the feilds are auto populated the rental can be returned.
+	2. Press return. (The lenght and return date are caculated automaticly. The return date is todays date and the length is caculated by subtracting the start date from the return date.)
+	(The info will not auto populate when returned. To see the data again follow the print reicpt steps.)
+Printing a Rental Recipt
+	1. Enter a valid transaction ID in the feild.
+	2. Press fill in rental data
+	3. Press print recipt
+All other buttons are only to display data that is helpfull for the steps above.
